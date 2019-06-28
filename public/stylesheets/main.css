@@ -1,0 +1,42 @@
+html {
+	position: relative;
+	min-height: 100%
+}
+
+.thumbnail img {
+	width: 100%;
+	
+}
+
+.thumbnail {
+	padding: 0;
+}
+
+.thumbnail .caption {
+	padding: 9px;
+}
+
+body {
+	background: #dee8ea;
+	
+}
+
+.delete-form {
+	display: inline-block;
+}
+
+.pull-right {
+	float: right;
+}
+
+.bg-danger {
+	border: 1px solid black;
+	border-radius: 5px;
+	padding: 5px;
+	color: red;
+}
+
+#map {
+	height: 400px;
+	width: 100%;
+}
