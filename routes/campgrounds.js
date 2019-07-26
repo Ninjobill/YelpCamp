@@ -52,8 +52,8 @@ router.post('/', middlewareObj.isLoggedIn, (req, res) => {
 		};
 	geocoder.geocode(req.body.location, (err, data) => {
 		if (err || !data.length) {
-			 req.flash('error', 'Invalid address');
 			console.log(err);
+			 req.flash('error', 'Invalid address');
 			 return res.redirect('back');
 	}
 		const lat = data[0].latitude,
