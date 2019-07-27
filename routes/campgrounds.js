@@ -12,7 +12,7 @@ const options = {
   formatter: null
 };
  
-let geocoder = nodeGeocoder(options);
+const geocoder = nodeGeocoder(options);
 
 router.get('/', (req, res) => {
 	let noMatch = null;
@@ -40,7 +40,7 @@ router.get('/', (req, res) => {
 });
 
 //CREATE - add new campground to DB
-router.post('/', middlewareObj.isLoggedIn, (req, res) => {
+router.post('/', middlewareObj.isLoggedIn, middlewareObj.isSafe, (req, res) => {
 	// get data from form and add to campgrounds array
 	const name = req.body.name,
 		image = req.body.image,
@@ -50,10 +50,15 @@ router.post('/', middlewareObj.isLoggedIn, (req, res) => {
 			id: req.user._id,
 			username: req.user.username
 		};
-	
-	const location = req.body.location;
-	let geocoder = nodeGeocoder(options);
-		const newCampground = {name: name, image: image, description: description, author: author, price: price, location: location, geocoder: geocoder};
+	geocoder.geocode(req.body.location, (err, data) => {
+		if (err || !data.length) {
+			 req.flash('error', 'Invalid address');
+			 return res.redirect('back');
+	}
+		const lat = data[0].latitude,
+			  lng = data[0].longitude,
+			  location = data[0].formattedAddress;
+		const newCampground = {name: name, image: image, description: description, author: author, price: price, location: location, lat: lat, lng: lng};
 		// Create a new campground and save to DB
 		Campground.create(newCampground, (err, newlyCreated) => {
 			if(err) {
@@ -64,6 +69,7 @@ router.post('/', middlewareObj.isLoggedIn, (req, res) => {
 				res.redirect('/campgrounds');
 			}
 		});
+	});
 });
 
 router.get('/new', middlewareObj.isLoggedIn, (req, res) => {

@@ -18,7 +18,7 @@ router.get('/register', (req, res) => {
 	res.render('register');
 });
 
-router.post('/register', (req, res)=>{
+router.post('/register', middlewareObj.isSafe, (req, res)=>{
 	var newUser = new User(
 		{
 			username: req.body.username,
